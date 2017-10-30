@@ -20,6 +20,8 @@ MESSAGE = '{
     }
 }'.freeze
 
+KEEPALIVE_MESSAGE = '{"type":"keepalive","datetime":"2017-10-30T05:14:03.374887685Z"}'.freeze
+
 Faye::WebSocket.load_adapter('thin')
 Thin::Logging.silent = true
 
@@ -27,6 +29,7 @@ class TestServer
   def call(env)
     ws = Faye::WebSocket.new(env)
     ws.on :open do
+      ws.send(KEEPALIVE_MESSAGE)
       ws.send(MESSAGE)
     end
     ws.rack_response

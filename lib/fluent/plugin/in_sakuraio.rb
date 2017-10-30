@@ -15,7 +15,6 @@ module Fluent::Plugin
     def configure(conf)
       super
 
-      @parser = Yajl::Parser.new
     end
 
     def start
@@ -58,7 +57,8 @@ module Fluent::Plugin
     end
 
     def parse(text)
-      j = @parser.parse(text)
+      parser = Yajl::Parser.new
+      j = parser.parse(text)
       records = []
       case j['type']
       when 'channels' then
