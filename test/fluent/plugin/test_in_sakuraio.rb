@@ -26,22 +26,22 @@ class SakuraIOInputTest < Test::Unit::TestCase
     [
       'uXXXXXXXXXXX.connection',
       Time.parse('2017-04-06T07:39:29.703232943Z').to_i,
-      { 'is_online' => true }
+      { 'module' => 'uXXXXXXXXXXX', 'is_online' => true }
     ],
     [
       'uXXXXXXXXXXX.location',
       Time.parse('2017-04-04T01:31:19.6431197Z').to_i,
-      { 'latitude' => 34.704254, 'longitude' => 135.494691, 'range_m' => 0 }
+      { 'module' => 'uXXXXXXXXXXX', 'latitude' => 34.704254, 'longitude' => 135.494691, 'range_m' => 0 }
     ],
     [
       'uXXXXXXXXXXX.channels.0',
       Time.parse('2017-04-06T07:39:29.703232943Z').to_i,
-      { 'channel' => 0, 'type' => 'I', 'value' => 10 }
+      { 'module' => 'uXXXXXXXXXXX', 'channel' => 0, 'type' => 'I', 'value' => 10 }
     ],
     [
       'uXXXXXXXXXXX.channels.1',
       Time.parse('2017-04-06T07:39:30.703232943Z').to_i,
-      { 'channel' => 1, 'type' => 'L', 'value' => 100 }
+      { 'module' => 'uXXXXXXXXXXX', 'channel' => 1, 'type' => 'L', 'value' => 100 }
     ]
   ]
 

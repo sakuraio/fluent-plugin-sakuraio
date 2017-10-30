@@ -77,6 +77,7 @@ module Fluent::Plugin
       record = {
         'tag' => j['module'] + '.connection',
         'record' => {
+          'module' => j['module'],
           'is_online' => j['payload']['is_online']
         },
         'time' => Time.parse(j['datetime']).to_i
@@ -91,6 +92,7 @@ module Fluent::Plugin
         record = {
           'tag' => j['module'] + '.location',
           'record' => {
+            'module' => j['module'],
             'latitude' => c['latitude'],
             'longitude' => c['longitude'],
             'range_m' => c['range_m']
@@ -109,6 +111,7 @@ module Fluent::Plugin
         record = {
           'tag' => tag + '.channels.' + c['channel'].to_s,
           'record' => {
+            'module' => j['module'],
             'channel' => c['channel'],
             'type' => c['type'],
             'value' => c['value']
