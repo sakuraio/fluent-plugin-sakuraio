@@ -15,6 +15,7 @@ module Fluent::Plugin
     def configure(conf)
       super
 
+      @time_parser = Fluent::TimeParser.new(nil)
     end
 
     def start
@@ -80,7 +81,7 @@ module Fluent::Plugin
           'module' => j['module'],
           'is_online' => j['payload']['is_online']
         },
-        'time' => Time.parse(j['datetime']).to_i
+        'time' => @time_parser.parse(j['datetime'])
       }
       records.push(record)
       records
@@ -97,7 +98,7 @@ module Fluent::Plugin
             'longitude' => c['longitude'],
             'range_m' => c['range_m']
           },
-          'time' => Time.parse(j['datetime']).to_i
+          'time' => @time_parser.parse(j['datetime'])
         }
         records.push(record)
       end
@@ -105,7 +106,7 @@ module Fluent::Plugin
     end
 
     def parse_channels(records, j)
-      message_time = Time.parse(j['datetime']).to_i
+      message_time = @time_parser.parse(j['datetime'])
       tag = j['module']
       j['payload']['channels'].each do |c|
         record = {
@@ -116,7 +117,7 @@ module Fluent::Plugin
             'type' => c['type'],
             'value' => c['value']
           },
-          'time' => Time.parse(c['datetime']).to_i || message_time
+          'time' => @time_parser.parse(c['datetime']) || message_time
         }
         records.push(record)
       end
