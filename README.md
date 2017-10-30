@@ -1,5 +1,7 @@
 # fluent-plugin-sakuraio
 
+[![Build Status](https://travis-ci.org/higebu/fluent-plugin-sakuraio.svg?branch=master)](https://travis-ci.org/higebu/fluent-plugin-sakuraio)
+
 Fluentd Input plugin to process message from sakura.io websocket API.
 
 ## Installation
