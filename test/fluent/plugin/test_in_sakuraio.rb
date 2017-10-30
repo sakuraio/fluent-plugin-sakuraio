@@ -24,12 +24,22 @@ class SakuraIOInputTest < Test::Unit::TestCase
 
   expected_records = [
     [
-      'uXXXXXXXXXXX.0',
+      'uXXXXXXXXXXX.connection',
+      Time.parse('2017-04-06T07:39:29.703232943Z').to_i,
+      { 'is_online' => true }
+    ],
+    [
+      'uXXXXXXXXXXX.location',
+      Time.parse('2017-04-04T01:31:19.6431197Z').to_i,
+      { 'latitude' => 34.704254, 'longitude' => 135.494691, 'range_m' => 0 }
+    ],
+    [
+      'uXXXXXXXXXXX.channels.0',
       Time.parse('2017-04-06T07:39:29.703232943Z').to_i,
       { 'channel' => 0, 'type' => 'I', 'value' => 10 }
     ],
     [
-      'uXXXXXXXXXXX.1',
+      'uXXXXXXXXXXX.channels.1',
       Time.parse('2017-04-06T07:39:30.703232943Z').to_i,
       { 'channel' => 1, 'type' => 'L', 'value' => 100 }
     ]
@@ -49,7 +59,7 @@ class SakuraIOInputTest < Test::Unit::TestCase
 
       assert_equal 'ws://127.0.0.1:8080', d.instance.url
 
-      d.run(expect_emits: 2, timeout: 10)
+      d.run(expect_emits: 4, timeout: 10)
       expected_records.zip(d.events) do |a|
         assert_equal a[0], a[1]
       end

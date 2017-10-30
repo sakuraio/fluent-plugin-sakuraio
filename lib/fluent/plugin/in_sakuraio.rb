@@ -61,10 +61,43 @@ module Fluent::Plugin
       j = parser.parse(text)
       records = []
       case j['type']
+      when 'connection' then
+        parse_connection(records, j)
+      when 'location' then
+        parse_location(records, j)
       when 'channels' then
         parse_channels(records, j)
       else
         log.debug "unknown type: #{j['type']}: #{text}"
+      end
+      records
+    end
+
+    def parse_connection(records, j)
+      record = {
+        'tag' => j['module'] + '.connection',
+        'record' => {
+          'is_online' => j['payload']['is_online']
+        },
+        'time' => Time.parse(j['datetime']).to_i
+      }
+      records.push(record)
+      records
+    end
+
+    def parse_location(records, j)
+      c = j['payload']['coordinate']
+      if c != 'null'
+        record = {
+          'tag' => j['module'] + '.location',
+          'record' => {
+            'latitude' => c['latitude'],
+            'longitude' => c['longitude'],
+            'range_m' => c['range_m']
+          },
+          'time' => Time.parse(j['datetime']).to_i
+        }
+        records.push(record)
       end
       records
     end
@@ -74,7 +107,7 @@ module Fluent::Plugin
       tag = j['module']
       j['payload']['channels'].each do |c|
         record = {
-          'tag' => tag + '.' + c['channel'].to_s,
+          'tag' => tag + '.channels.' + c['channel'].to_s,
           'record' => {
             'channel' => c['channel'],
             'type' => c['type'],
