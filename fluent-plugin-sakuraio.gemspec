@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'fluent-plugin-sakuraio'
-  spec.version       = '0.0.5'
+  spec.version       = '0.0.6'
   spec.authors       = ['Yuya Kusakabe']
   spec.email         = ['yuya.kusakabe@gmail.com']
 
   spec.summary       = 'fluentd plugin for sakura.io'
   spec.description   = 'fluentd plugin for sakura.io'
-  spec.homepage      = 'https://github.com/higebu/fluent-plugin-sakuraio'
+  spec.homepage      = 'https://github.com/sakuraio/fluent-plugin-sakuraio'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

@@ -2,7 +2,6 @@ require 'fluent/input'
 require 'yajl'
 require 'faye/websocket'
 require 'eventmachine'
-require 'time'
 
 module Fluent::Plugin
   class SakuraIOInput < Input
