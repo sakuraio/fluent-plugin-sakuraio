@@ -1,4 +1,4 @@
-require 'fluent/input'
+require 'fluent/plugin/input'
 require 'yajl'
 require 'faye/websocket'
 require 'eventmachine'
