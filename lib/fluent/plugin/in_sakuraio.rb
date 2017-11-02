@@ -9,7 +9,7 @@ module Fluent::Plugin
 
     helpers :thread
 
-    config_param :url, :string, default: nil, secret: true
+    config_param :url, :string, secret: true
 
     def configure(conf)
       super
