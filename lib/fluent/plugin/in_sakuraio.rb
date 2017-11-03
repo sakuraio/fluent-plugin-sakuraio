@@ -20,17 +20,25 @@ module Fluent::Plugin
     def start
       super
 
-      thread_create(:in_sakuraio) do
-        run
+      ensure_reactor_running
+      thread_create(:in_sakuraio, &method(:run))
+    end
+
+    def ensure_reactor_running
+      return if EM.reactor_running?
+      thread_create(:in_sakuraio_reactor) do
+        EM.run
       end
     end
 
     def shutdown
+      EM.stop if EM.reactor_running?
+
       super
     end
 
     def run
-      EM.run do
+      EM.next_tick do
         client = Faye::WebSocket::Client.new(@url)
         client.on :open do
           log.info "sakuraio: starting websocket connection for #{@url}."
