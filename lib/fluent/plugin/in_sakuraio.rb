@@ -14,6 +14,7 @@ module Fluent::Plugin
     def configure(conf)
       super
 
+      @client = Faye::WebSocket::Client.new(@url)
       @time_parser = Fluent::TimeParser.new(nil)
     end
 
@@ -39,12 +40,11 @@ module Fluent::Plugin
 
     def run
       EM.next_tick do
-        client = Faye::WebSocket::Client.new(@url)
-        client.on :open do
+        @client.on :open do
           log.info "sakuraio: starting websocket connection for #{@url}."
         end
 
-        client.on :message do |event|
+        @client.on :message do |event|
           log.debug "sakuraio: received message #{event.data}"
           records = parse(event.data)
           unless records.empty?
@@ -54,12 +54,12 @@ module Fluent::Plugin
           end
         end
 
-        client.on :error do |event|
+        @client.on :error do |event|
           log.warn "sakuraio: #{event.message}"
         end
 
-        client.on :close do
-          client = nil
+        @client.on :close do
+          @client = nil
         end
       end
     end
