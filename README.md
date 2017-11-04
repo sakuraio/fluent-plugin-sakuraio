@@ -37,6 +37,17 @@ gem install 'fluent-plugin-sakuraio'
 
 The details of sakura.io message spec: https://sakura.io/docs/pages/platform-specification/message.html
 
+## Output Configuration
+
+```
+<match **>
+  @type sakuraio
+  url wss://api.sakura.io/ws/v1/xxxxxxxxxxxxxxxxxxxxxxx
+  modules ["uXXXXXXXXXXX"] # array of modules
+  channels {"0": ["key", "i"]} # hash of channels {"channel number": ["key in record", "data type"]}
+</match>
+```
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).

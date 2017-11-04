@@ -48,6 +48,8 @@ Faye::WebSocket.load_adapter('thin')
 Thin::Logging.silent = true
 
 class TestServer
+  attr_reader :data
+
   def call(env)
     ws = Faye::WebSocket.new(env)
     ws.on :open do
@@ -55,6 +57,9 @@ class TestServer
       ws.send(CONNECTION_MESSAGE)
       ws.send(LOCATION_MESSAGE)
       ws.send(CHANNELS_MESSAGE)
+    end
+    ws.on :message do |e|
+      @data = e.data
     end
     ws.rack_response
   end
