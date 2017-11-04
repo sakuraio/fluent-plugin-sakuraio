@@ -26,7 +26,7 @@ module Fluent::Plugin
       end
     end
 
-    def run
+    def run()
       EM.next_tick do
         @client.on :open do
           log.info "sakuraio: starting websocket connection for #{@url}."
