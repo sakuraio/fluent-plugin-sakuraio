@@ -51,10 +51,10 @@ class SakuraIOOutputTest < Test::Unit::TestCase
 
       t = @time_parser.parse('2016-06-10 19:46:32 +0900')
       d.run do
-        d.feed('tag', t, 'KEY' => '1')
+        d.feed('tag', t, 'KEY' => 1)
       end
       sleep 1
-      assert_equal '{"type":"channels","payload":{"channels":[{"channel":"0","type":"i","value":"1"}]}}', test_server.data
+      assert_equal '{"type":"channels","module":"uXXXXXXXXXXX","payload":{"channels":[{"channel":0,"type":"i","value":1}]}}', test_server.data
     end
   end
 end
