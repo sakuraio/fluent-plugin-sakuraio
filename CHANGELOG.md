@@ -1,5 +1,8 @@
 # Change Log
 
+## [v0.1.0](https://github.com/sakuraio/fluent-plugin-sakuraio/tree/v0.1.0) (2017-11-04)
+[Full Changelog](https://github.com/sakuraio/fluent-plugin-sakuraio/compare/v0.0.7...v0.1.0)
+
 ## [v0.0.7](https://github.com/sakuraio/fluent-plugin-sakuraio/tree/v0.0.7) (2017-11-03)
 [Full Changelog](https://github.com/sakuraio/fluent-plugin-sakuraio/compare/v0.0.6...v0.0.7)
 
