@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'fluentd', '>= 0.14', '< 2'
   spec.add_runtime_dependency 'yajl-ruby'
   spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'codecov'
   spec.add_development_dependency 'rack'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rubocop'
