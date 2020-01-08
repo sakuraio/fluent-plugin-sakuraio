@@ -1,7 +1,12 @@
+# frozen_string_literal: true
+
 require 'faye/websocket'
 require 'time'
 
-KEEPALIVE_MESSAGE = '{"type":"keepalive","datetime":"2017-10-30T05:14:03.374887685Z"}'.freeze
+KEEPALIVE_MESSAGE = '{
+    "type":"keepalive",
+    "datetime":"2017-10-30T05:14:03.374887685Z"
+}'
 
 CONNECTION_MESSAGE = '{
     "module": "uXXXXXXXXXXX",
@@ -10,7 +15,7 @@ CONNECTION_MESSAGE = '{
     "payload": {
         "is_online": true
     }
-}'.freeze
+}'
 
 LOCATION_MESSAGE = '{
     "datetime": "2017-04-04T01:31:19.6431197Z",
@@ -23,7 +28,7 @@ LOCATION_MESSAGE = '{
             "range_m": 0
         }
     }
-}'.freeze
+}'
 
 CHANNELS_MESSAGE = '{
     "module": "uXXXXXXXXXXX",
@@ -42,7 +47,7 @@ CHANNELS_MESSAGE = '{
             "datetime": "2017-04-06T07:39:30.703232943Z"
         }]
     }
-}'.freeze
+}'
 
 Faye::WebSocket.load_adapter('thin')
 Thin::Logging.silent = true
@@ -51,17 +56,21 @@ class TestServer
   attr_reader :data
 
   def call(env)
-    ws = Faye::WebSocket.new(env)
-    ws.on :open do
-      ws.send(KEEPALIVE_MESSAGE)
-      ws.send(CONNECTION_MESSAGE)
-      ws.send(LOCATION_MESSAGE)
-      ws.send(CHANNELS_MESSAGE)
+    @ws = Faye::WebSocket.new(env)
+    @ws.on :open do
+      send_messages
     end
-    ws.on :message do |e|
+    @ws.on :message do |e|
       @data = e.data
     end
-    ws.rack_response
+    @ws.rack_response
+  end
+
+  def send_messages
+    @ws.send(KEEPALIVE_MESSAGE)
+    @ws.send(CONNECTION_MESSAGE)
+    @ws.send(LOCATION_MESSAGE)
+    @ws.send(CHANNELS_MESSAGE)
   end
 
   def listen(host = '127.0.0.1', port = 8080)

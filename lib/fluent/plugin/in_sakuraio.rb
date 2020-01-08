@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fluent/plugin/input'
 require 'yajl'
 require 'faye/websocket'
@@ -26,6 +28,7 @@ module Fluent::Plugin
 
     def ensure_reactor_running
       return if EM.reactor_running?
+
       thread_create(:in_sakuraio_reactor) do
         EM.run
       end
@@ -45,13 +48,7 @@ module Fluent::Plugin
         end
 
         client.on :message do |event|
-          log.debug "sakuraio: received message #{event.data}"
-          records = parse(event.data)
-          unless records.empty?
-            records.each do |r|
-              router.emit(r['tag'], r['time'], r['record'])
-            end
-          end
+          handle_message(event)
         end
 
         client.on :error do |event|
@@ -64,16 +61,26 @@ module Fluent::Plugin
       end
     end
 
+    def handle_message(event)
+      log.debug "sakuraio: received message #{event.data}"
+      records = parse(event.data)
+      return if records.empty?
+
+      records.each do |r|
+        router.emit(r['tag'], r['time'], r['record'])
+      end
+    end
+
     def parse(text)
       parser = Yajl::Parser.new
       j = parser.parse(text)
       records = []
       case j['type']
-      when 'connection' then
+      when 'connection'
         parse_connection(records, j)
-      when 'location' then
+      when 'location'
         parse_location(records, j)
-      when 'channels' then
+      when 'channels'
         parse_channels(records, j)
       else
         log.debug "unknown type: #{j['type']}: #{text}"
@@ -81,54 +88,57 @@ module Fluent::Plugin
       records
     end
 
-    def parse_connection(records, j)
+    def parse_connection(records, data)
       record = {
-        'tag' => j['module'] + '.connection',
+        'tag' => data['module'] + '.connection',
         'record' => {
-          'module' => j['module'],
-          'is_online' => j['payload']['is_online']
+          'module' => data['module'],
+          'is_online' => data['payload']['is_online']
         },
-        'time' => @time_parser.parse(j['datetime'])
+        'time' => @time_parser.parse(data['datetime'])
       }
       records.push(record)
       records
     end
 
-    def parse_location(records, j)
-      c = j['payload']['coordinate']
+    def parse_location(records, data)
+      c = data['payload']['coordinate']
       if c != 'null'
         record = {
-          'tag' => j['module'] + '.location',
+          'tag' => data['module'] + '.location',
           'record' => {
-            'module' => j['module'],
+            'module' => data['module'],
             'latitude' => c['latitude'],
             'longitude' => c['longitude'],
             'range_m' => c['range_m']
           },
-          'time' => @time_parser.parse(j['datetime'])
+          'time' => @time_parser.parse(data['datetime'])
         }
         records.push(record)
       end
       records
     end
 
-    def parse_channels(records, j)
-      message_time = @time_parser.parse(j['datetime'])
-      tag = j['module']
-      j['payload']['channels'].each do |c|
-        record = {
-          'tag' => tag + '.channels.' + c['channel'].to_s,
-          'record' => {
-            'module' => j['module'],
-            'channel' => c['channel'],
-            'type' => c['type'],
-            'value' => c['value']
-          },
-          'time' => @time_parser.parse(c['datetime']) || message_time
-        }
-        records.push(record)
+    def parse_channels(records, data)
+      msg_time = @time_parser.parse(data['datetime'])
+      mod = data['module']
+      data['payload']['channels'].each do |c|
+        records.push(parse_channel(mod, msg_time, c))
       end
       records
+    end
+
+    def parse_channel(mod, msg_time, chan)
+      {
+        'tag' => mod + '.channels.' + chan['channel'].to_s,
+        'record' => {
+          'module' => mod,
+          'channel' => chan['channel'],
+          'type' => chan['type'],
+          'value' => chan['value']
+        },
+        'time' => @time_parser.parse(chan['datetime']) || msg_time
+      }
     end
   end
 end

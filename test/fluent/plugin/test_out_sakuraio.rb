@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'helper'
 require 'fluent/plugin/out_sakuraio'
 require 'fluent/test/driver/output'
@@ -12,7 +14,7 @@ class SakuraIOOutputTest < Test::Unit::TestCase
     url URL
     modules ["AAA","BBB","CCC"]
     channels {"0": ["KEY", "TYPE"]}
-  ]).freeze
+  ])
 
   def create_driver(conf = CONFIG)
     Fluent::Test::Driver::Output.new(Fluent::Plugin::SakuraIOOutput).configure(conf)
@@ -25,11 +27,11 @@ class SakuraIOOutputTest < Test::Unit::TestCase
     end
     test 'check modules' do
       d = create_driver
-      assert_equal %w(AAA BBB CCC), d.instance.modules
+      assert_equal %w[AAA BBB CCC], d.instance.modules
     end
     test 'check channels' do
       d = create_driver
-      assert_equal({ '0' => %w(KEY TYPE) }, d.instance.channels)
+      assert_equal({ '0' => %w[KEY TYPE] }, d.instance.channels)
     end
   end
 

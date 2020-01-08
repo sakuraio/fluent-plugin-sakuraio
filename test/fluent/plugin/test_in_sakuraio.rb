@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'helper'
 require 'fluent/plugin/in_sakuraio'
 require 'fluent/test/driver/input'
@@ -10,7 +12,7 @@ class SakuraIOInputTest < Test::Unit::TestCase
 
   CONFIG = %([
     url URL
-  ]).freeze
+  ])
 
   def create_driver(conf = CONFIG)
     Fluent::Test::Driver::Input.new(Fluent::Plugin::SakuraIOInput).configure(conf)

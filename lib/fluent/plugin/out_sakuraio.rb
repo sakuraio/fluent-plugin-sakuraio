@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'fluent/plugin/output'
 require 'yajl'
 require 'faye/websocket'
@@ -20,12 +22,13 @@ module Fluent::Plugin
 
     def ensure_reactor_running
       return if EM.reactor_running?
+
       thread_create(:out_sakuraio_reactor) do
         EM.run
       end
     end
 
-    def run()
+    def run
       @client = Faye::WebSocket::Client.new(@url)
       EM.next_tick do
         @client.on :open do
@@ -46,8 +49,8 @@ module Fluent::Plugin
       end
     end
 
-    def process(_tag, es)
-      es.each do |_time, record|
+    def process(_tag, events)
+      events.each do |_time, record|
         log.debug "sakuraio: process record #{record}"
         modules.each do |m|
           s = encode_record(m, record)
@@ -57,7 +60,7 @@ module Fluent::Plugin
       end
     end
 
-    def encode_record(m, record)
+    def encode_record(mod, record)
       data = []
       @channels.each do |ch, v|
         key, type = v
@@ -66,7 +69,7 @@ module Fluent::Plugin
                   'value' => record[key])
       end
       hash = { 'type' => 'channels',
-               'module' => m,
+               'module' => mod,
                'payload' => { 'channels' => data } }
       Yajl::Encoder.encode(hash)
     end
