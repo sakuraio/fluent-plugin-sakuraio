@@ -1,6 +1,8 @@
 # fluent-plugin-sakuraio
 
-[![Build Status](https://travis-ci.org/sakuraio/fluent-plugin-sakuraio.svg?branch=master)](https://travis-ci.org/sakuraio/fluent-plugin-sakuraio)
+[![Test Status](https://github.com/sakuraio/fluent-plugin-sakuraio/workflows/test/badge.svg?branch=master)][actions]
+
+[actions]: https://github.com/sakuraio/fluent-plugin-sakuraio/actions?workflow=test
 
 Fluentd Input plugin to process message from [sakura.io](https://sakura.io) WebSocket API.
 
