@@ -43,7 +43,7 @@ module Fluent::Plugin
 
     def run
       options = {}
-      @ping.positive? options[:ping] = @ping
+      options[:ping] = @ping if @ping.positive?
       client = Faye::WebSocket::Client.new(@url, nil, options)
       EM.next_tick do
         client.on :open do
