@@ -12,6 +12,7 @@ module Fluent::Plugin
     config_param :modules, :array, value_type: :string, secret: true
     # channels {"channel_number": ["key", "type"]}
     config_param :channels, :hash
+    config_param :ping, :integer, default: 60
 
     def configure(conf)
       super
@@ -29,7 +30,9 @@ module Fluent::Plugin
     end
 
     def run
-      @client = Faye::WebSocket::Client.new(@url)
+      options = {}
+      @ping.positive? options[:ping] = @ping
+      @client = Faye::WebSocket::Client.new(@url, nil, options)
       EM.next_tick do
         @client.on :open do
           log.info "sakuraio: starting websocket connection for #{@url}."
@@ -43,8 +46,9 @@ module Fluent::Plugin
           log.warn "sakuraio: #{event.message}"
         end
 
-        @client.on :close do
-          @client = nil
+        @client.on :close do |event|
+          log.warn "sakuraio: #{event.code} #{event.reason}"
+          run
         end
       end
     end

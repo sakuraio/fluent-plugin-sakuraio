@@ -13,6 +13,9 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
+Metrics/AbcSize:
+  Max: 25
+
 Metrics/BlockLength:
   Exclude:
     - 'test/**/*'

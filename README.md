@@ -21,6 +21,7 @@ gem install 'fluent-plugin-sakuraio'
 <source>
   @type sakuraio
   url wss://api.sakura.io/ws/v1/xxxxxxxxxxxxxxxxxxxxxxx
+  ping 60
 </source>
 ```
 
@@ -45,6 +46,7 @@ The details of sakura.io message spec: https://sakura.io/docs/pages/platform-spe
   url wss://api.sakura.io/ws/v1/xxxxxxxxxxxxxxxxxxxxxxx
   modules ["uXXXXXXXXXXX"] # array of modules
   channels {"0": ["key", "i"]} # hash of channels {"channel number": ["key in record", "data type"]}
+  ping 60
 </match>
 ```
 
